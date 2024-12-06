@@ -1,13 +1,16 @@
 import express from "express";
-import authRoutes from "./routes/auth.routes.js";
 import dotenv from "dotenv";
+
+import authRoutes from "./routes/auth.routes.js";
 import connectMongoBD from "./db/connectDB.js";
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 5000;
-console.log(process.env.MONGO_URI);
+
+app.use(express.json()); //to get body data
+app.use(express.urlencoded({ extended: true })); //to parse form data
 
 app.use("/api/auth", authRoutes);
 

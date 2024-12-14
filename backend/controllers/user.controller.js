@@ -1,6 +1,8 @@
 import User from "../models/user.model.js";
 import Notification from "../models/notification.model.js";
 
+import bcrypt from "bcryptjs";
+import { v2 as cloudinary } from "cloudinary";
 export const getUserProfile = async (req, res) => {
   const { username } = req.params;
 
@@ -77,5 +79,103 @@ export const getSuggestedUsers = async (req, res) => {
 
     const suggestedUsers = filteredUsers.slice(0, 4);
     suggestedUsers.forEach((user) => (user.password = null));
-  } catch (error) {}
+
+    res.status(200).json(suggestedUsers);
+  } catch (error) {
+    console.log("error in getSuggestedUsers", error.message);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+export const updateUser = async (req, res) => {
+  const { fullName, username, email, currentPassword, NewPassword, bio, link } =
+    req.body;
+  let { profileImage, coverImage } = req.body;
+
+  try {
+    const userId = req.user._id;
+    let user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Handle password update
+    if (currentPassword || NewPassword) {
+      if (!currentPassword || !NewPassword) {
+        return res.status(400).json({
+          error: "Please provide both current password and new password",
+        });
+      }
+
+      const isPasswordCorrect = await bcrypt.compare(
+        currentPassword,
+        user.password
+      );
+
+      if (!isPasswordCorrect) {
+        return res.status(400).json({ error: "Current password is incorrect" });
+      }
+
+      if (NewPassword.length < 6) {
+        return res
+          .status(400)
+          .json({ error: "Password must be at least 6 characters" });
+      }
+
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(NewPassword, salt);
+    }
+
+    // Handle profile image upload
+    if (profileImage) {
+      try {
+        if (user.profileImage) {
+          await cloudinary.uploader.destroy(
+            user.profileImage.split("/").pop().split(".")[0]
+          );
+        }
+        const result = await cloudinary.uploader.upload(profileImage);
+        user.profileImage = result.secure_url;
+      } catch (err) {
+        console.error("Error uploading profile image:", err.message);
+        return res
+          .status(500)
+          .json({ error: "Failed to upload profile image" });
+      }
+    }
+
+    // Handle cover image upload
+    if (coverImage) {
+      try {
+        if (user.coverImage) {
+          await cloudinary.uploader.destroy(
+            user.coverImage.split("/").pop().split(".")[0]
+          );
+        }
+        const result = await cloudinary.uploader.upload(coverImage);
+        user.coverImage = result.secure_url;
+      } catch (err) {
+        console.error("Error uploading cover image:", err.message);
+        return res.status(500).json({ error: "Failed to upload cover image" });
+      }
+    }
+
+    // Update user details
+    user.fullName = fullName || user.fullName;
+    user.username = username || user.username;
+    user.email = email || user.email;
+    user.bio = bio || user.bio;
+    user.link = link || user.link;
+
+    user = await user.save();
+
+    // Remove sensitive information
+    const { password, ...userWithoutPassword } = user.toObject();
+
+    res.status(200).json(userWithoutPassword);
+  } catch (error) {
+    console.error("Error in updateUser:", error.message);
+    res.status(500).json({ error: error.message });
+  }
 };

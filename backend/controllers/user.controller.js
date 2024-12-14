@@ -3,6 +3,8 @@ import Notification from "../models/notification.model.js";
 
 import bcrypt from "bcryptjs";
 import { v2 as cloudinary } from "cloudinary";
+
+//controller for getting user profile
 export const getUserProfile = async (req, res) => {
   const { username } = req.params;
 
@@ -18,6 +20,7 @@ export const getUserProfile = async (req, res) => {
   }
 };
 
+//controller for following and unfollowing a user
 export const followUnfollowUser = async (req, res) => {
   try {
     const { id } = req.params;
@@ -60,6 +63,7 @@ export const followUnfollowUser = async (req, res) => {
   }
 };
 
+//controller for getting suggested users
 export const getSuggestedUsers = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -87,6 +91,7 @@ export const getSuggestedUsers = async (req, res) => {
   }
 };
 
+//controller for updating user
 export const updateUser = async (req, res) => {
   const { fullName, username, email, currentPassword, NewPassword, bio, link } =
     req.body;

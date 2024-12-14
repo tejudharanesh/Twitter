@@ -3,6 +3,7 @@ import User from "../models/user.model.js";
 import Notification from "../models/notification.model.js";
 import { v2 as cloudinary } from "cloudinary";
 
+// Controller for creating a new post
 export const createPost = async (req, res) => {
   try {
     const { text } = req.body;
@@ -39,6 +40,7 @@ export const createPost = async (req, res) => {
   }
 };
 
+// Controller for liking and unliking a post
 export const likeUnlikePost = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -81,6 +83,7 @@ export const likeUnlikePost = async (req, res) => {
   }
 };
 
+// Controller for commenting on a post
 export const commentPost = async (req, res) => {
   try {
     const { text } = req.body;
@@ -112,6 +115,8 @@ export const commentPost = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+// Controller for deleting a post
 export const deletePost = async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
@@ -139,6 +144,7 @@ export const deletePost = async (req, res) => {
   }
 };
 
+// Controller for getting all posts
 export const getAllPosts = async (req, res) => {
   try {
     const posts = await Post.find()
@@ -163,6 +169,7 @@ export const getAllPosts = async (req, res) => {
   }
 };
 
+// Controller for getting liked posts
 export const getLikedPosts = async (req, res) => {
   const userId = req.params.id;
 
@@ -193,6 +200,7 @@ export const getLikedPosts = async (req, res) => {
   }
 };
 
+// Controller for getting following posts
 export const getFollowingPosts = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -223,6 +231,7 @@ export const getFollowingPosts = async (req, res) => {
   }
 };
 
+// Controller for getting user posts
 export const getUserPosts = async (req, res) => {
   const userId = req.params.username;
   try {

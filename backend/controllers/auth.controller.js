@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import User from "../models/user.model.js";
 import { generateTokenAndSetCookie } from "../lib/util/generateToken.js";
 
+//controller for signup
 export const signup = async (req, res) => {
   try {
     const { fullName, username, email, password } = req.body;
@@ -60,6 +61,7 @@ export const signup = async (req, res) => {
   }
 };
 
+//controller for login
 export const login = async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -91,6 +93,7 @@ export const login = async (req, res) => {
   }
 };
 
+//controller for logout
 export const logout = async (req, res) => {
   try {
     res.cookie("token", "", { maxAge: 0 });
@@ -101,6 +104,8 @@ export const logout = async (req, res) => {
   }
 };
 
+
+//controller for boarding the user profile
 export const getMe = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select("-password");

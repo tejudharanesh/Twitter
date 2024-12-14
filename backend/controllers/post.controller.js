@@ -53,10 +53,10 @@ export const likeUnlikePost = async (req, res) => {
     const isLiked = post.likes.includes(userId);
 
     if (isLiked) {
-      await Post.updateOne({
-        _id: postId,
-        $pull: { likes: userId },
-      });
+      await Post.updateOne(
+        { _id: postId }, // Find the post by its ID
+        { $pull: { likes: userId } } // Remove userId from the likes array
+      );
       await User.updateOne({ _id: userId }, { $pull: { likedPosts: postId } });
 
       res.status(200).json({ message: "Post unliked successfully" });
@@ -189,6 +189,63 @@ export const getLikedPosts = async (req, res) => {
     res.status(200).json(posts);
   } catch (error) {
     console.log("Error during getLikedPosts", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const getFollowingPosts = async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const feedPosts = await Post.find({ user: { $in: user.following } })
+      .sort({
+        createdAt: -1,
+      })
+      .populate({
+        path: "user",
+        select: "-password",
+      })
+      .populate({
+        path: "comments.user",
+        select: "-password",
+      });
+
+    res.status(200).json(feedPosts);
+  } catch (error) {
+    console.log("Error during getFollowingPosts", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const getUserPosts = async (req, res) => {
+  const userId = req.params.username;
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    const posts = await Post.find({ user: userId })
+      .sort({ createdAt: -1 })
+      .populate({
+        path: "user",
+        select: "-password",
+      })
+      .populate({
+        path: "comments.user",
+        select: "-password",
+      });
+
+    res.status(200).json(posts);
+  } catch (error) {
+    console.log("Error during getUserPosts", error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };

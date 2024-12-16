@@ -104,7 +104,6 @@ export const logout = async (req, res) => {
   }
 };
 
-
 //controller for boarding the user profile
 export const getMe = async (req, res) => {
   try {

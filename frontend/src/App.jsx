@@ -18,6 +18,7 @@ function App() {
     error,
     isError,
   } = useQuery({
+    //we use this query to get the authUser
     queryKey: ["authUser"],
     queryFn: async () => {
       try {
@@ -28,6 +29,7 @@ function App() {
           },
         });
         const data = await response.json();
+        if (data.error) return null;
         if (!response.ok) throw new Error(data.error || "failed to fetch user");
         return data;
       } catch (error) {
@@ -35,7 +37,6 @@ function App() {
         throw error;
       }
     },
-    refetchOnWindowFocus: false,
     retry: false,
   });
 
@@ -47,7 +48,7 @@ function App() {
     );
   return (
     <div className="flex max-w-6xl mx-auto">
-      <Sidebar />
+      {authUser && <Sidebar />}
       <Routes>
         <Route
           path="/"
@@ -70,7 +71,7 @@ function App() {
           element={authUser ? <ProfilePage /> : <Navigate to="/login" />}
         />
       </Routes>
-      <RightPanel />
+      {authUser && <RightPanel />}
       <Toaster />
     </div>
   );

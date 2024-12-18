@@ -5,7 +5,7 @@ import T from "../../../components/svgs/T";
 
 import { MdOutlineMail } from "react-icons/md";
 import { MdPassword } from "react-icons/md";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { toast } from "react-hot-toast";
 
@@ -14,6 +14,8 @@ const LoginPage = () => {
     username: "",
     password: "",
   });
+
+  const queryClient = useQueryClient();
 
   const { mutate, isError, isPending, error } = useMutation({
     mutationFn: async ({ username, password }) => {
@@ -38,7 +40,7 @@ const LoginPage = () => {
     },
 
     onSuccess: () => {
-      toast.success("Logged in successfully");
+      queryClient.invalidateQueries({ queryKey: ["authUser"] });
     },
   });
 
@@ -79,6 +81,7 @@ const LoginPage = () => {
               className="grow"
               placeholder="Password"
               name="password"
+              autoComplete="off"
               onChange={handleInputChange}
               value={formData.password}
             />

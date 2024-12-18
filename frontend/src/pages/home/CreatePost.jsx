@@ -17,7 +17,7 @@ const CreatePost = () => {
     mutate: createPost,
     isError,
     error,
-    isLoading,
+    isPending,
   } = useMutation({
     mutationFn: async ({ img, text }) => {
       try {
@@ -29,7 +29,6 @@ const CreatePost = () => {
           body: JSON.stringify({ text, img }),
         });
         const data = await response.json();
-        console.log(response);
 
         if (!response.ok)
           throw new Error(data.error || "failed to create post");
@@ -108,7 +107,7 @@ const CreatePost = () => {
             onChange={handleImgChange}
           />
           <button className="btn btn-primary rounded-full btn-sm text-white px-4">
-            {isLoading ? "Posting..." : "Post"}
+            {isPending ? "Posting..." : "Post"}
           </button>
         </div>
         {isError && <div className="text-red-500">{error.message}</div>}

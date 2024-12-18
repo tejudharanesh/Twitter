@@ -7,6 +7,8 @@ import { v2 as cloudinary } from "cloudinary";
 export const createPost = async (req, res) => {
   try {
     const { text } = req.body;
+    console.log(text);
+
     let { img } = req.body;
     const userId = req.user._id.toString();
 

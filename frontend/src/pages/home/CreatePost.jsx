@@ -20,8 +20,6 @@ const CreatePost = () => {
     isLoading,
   } = useMutation({
     mutationFn: async ({ img, text }) => {
-      console.log(img, text);
-
       try {
         const response = await fetch("/api/posts/create", {
           method: "POST",

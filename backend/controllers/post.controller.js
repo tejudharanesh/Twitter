@@ -187,7 +187,7 @@ export const getLikedPosts = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    const posts = await Post.find({ _id: { $in: user.likedPosts } })
+    const likedPosts = await Post.find({ _id: { $in: user.likedPosts } })
       .sort({
         createdAt: -1,
       })
@@ -200,7 +200,7 @@ export const getLikedPosts = async (req, res) => {
         select: "-password",
       });
 
-    res.status(200).json(posts);
+    res.status(200).json(likedPosts);
   } catch (error) {
     console.log("Error during getLikedPosts", error.message);
     res.status(500).json({ error: "Internal Server Error" });
@@ -240,15 +240,15 @@ export const getFollowingPosts = async (req, res) => {
 
 // Controller for getting user posts
 export const getUserPosts = async (req, res) => {
-  const userId = req.params.username;
+  const { username } = req.params;
   try {
-    const user = await User.findById(userId);
+    const user = await User.findOne({ username: username });
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    const posts = await Post.find({ user: userId })
+    const posts = await Post.find({ user: user._id })
       .sort({ createdAt: -1 })
       .populate({
         path: "user",

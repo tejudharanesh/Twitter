@@ -1,17 +1,18 @@
-import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 
 import Posts from "../../components/common/Posts";
 import ProfileHeaderSkeleton from "../../components/skeletons/ProfileHeaderSkeleton";
 import EditProfileModal from "./EditProfileModal";
 
 import { POSTS } from "../../utils/db/dummy";
-
 import { FaArrowLeft } from "react-icons/fa6";
 import { IoCalendarOutline } from "react-icons/io5";
 import { FaLink } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 
+import { useQuery } from "@tanstack/react-query";
+import { formatMemberSinceDate } from "../../utils/date/index.js";
 const ProfilePage = () => {
   const [coverImg, setCoverImg] = useState(null);
   const [profileImg, setProfileImg] = useState(null);
@@ -19,21 +20,39 @@ const ProfilePage = () => {
 
   const coverImgRef = useRef(null);
   const profileImgRef = useRef(null);
+  const { username } = useParams();
 
-  const isLoading = false;
   const isMyProfile = true;
 
-  const user = {
-    _id: "1",
-    fullName: "Vaibhav",
-    username: "VaibhavV",
-    profileImg: "/avatars/boy2.png",
-    coverImg: "/cover.png",
-    bio: "Iam a carnatic musician and singer.",
-    link: "https://youtube.com/@vaibhavV",
-    following: ["1", "2", "3"],
-    followers: ["1", "2", "3"],
-  };
+  const {
+    data: user,
+    isLoading,
+    refetch,
+    isRefetching,
+  } = useQuery({
+    queryKey: ["user"],
+    queryFn: async () => {
+      try {
+        const response = await fetch(`/api/users/profile/${username}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await response.json();
+        if (data.error) return null;
+        if (!response.ok) throw new Error(data.error || "failed to fetch user");
+        return data;
+      } catch (error) {
+        throw new Error(error.message);
+      }
+    },
+    retry: false,
+  });
+
+  useEffect(() => {
+    refetch();
+  }, [username, refetch]);
 
   const handleImgChange = (e, state) => {
     const file = e.target.files[0];
@@ -51,12 +70,12 @@ const ProfilePage = () => {
     <>
       <div className="flex-[4_4_0]  border-r border-gray-700 min-h-screen ">
         {/* HEADER */}
-        {isLoading && <ProfileHeaderSkeleton />}
-        {!isLoading && !user && (
+        {(isLoading || isRefetching) && <ProfileHeaderSkeleton />}
+        {!isLoading && !isRefetching && !user && (
           <p className="text-center text-lg mt-4">User not found</p>
         )}
         <div className="flex flex-col">
-          {!isLoading && user && (
+          {!isLoading && !isRefetching && user && (
             <>
               <div className="flex gap-10 px-4 py-2 items-center">
                 <Link to="/">
@@ -158,7 +177,7 @@ const ProfilePage = () => {
                           rel="noreferrer"
                           className="text-sm text-blue-500 hover:underline"
                         >
-                          youtube.com/@vaibhavV
+                          {user?.link}
                         </a>
                       </>
                     </div>
@@ -166,7 +185,7 @@ const ProfilePage = () => {
                   <div className="flex gap-2 items-center">
                     <IoCalendarOutline className="w-4 h-4 text-slate-500" />
                     <span className="text-sm text-slate-500">
-                      Joined July 2021
+                      {formatMemberSinceDate(user?.createdAt)}
                     </span>
                   </div>
                 </div>
@@ -197,7 +216,7 @@ const ProfilePage = () => {
                 </div>
                 <div
                   className="flex justify-center flex-1 p-3 text-slate-500 hover:bg-secondary transition duration-300 relative cursor-pointer"
-                  onClick={() => setFeedType("likes")}
+                  onClick={() => setFeedType("liked")}
                 >
                   Likes
                   {feedType === "likes" && (
@@ -208,7 +227,7 @@ const ProfilePage = () => {
             </>
           )}
 
-          <Posts />
+          <Posts username={username} feedType={feedType} userId={user?._id} />
         </div>
       </div>
     </>

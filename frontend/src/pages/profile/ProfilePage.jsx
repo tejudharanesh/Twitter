@@ -111,7 +111,7 @@ const ProfilePage = () => {
 
   return (
     <>
-      <div className="flex-[4_4_0]  border-r border-gray-700 min-h-screen ">
+      <div className="flex-[4_4_0]  border-r border-gray-700 min-h-screen overflow-y-scroll">
         {/* HEADER */}
         {(isLoading || isRefetching) && <ProfileHeaderSkeleton />}
         {!isLoading && !isRefetching && !user && (
@@ -135,7 +135,7 @@ const ProfilePage = () => {
               <div className="relative group/cover">
                 <img
                   src={coverImg || user?.coverImage || "/cover.png"}
-                  className="h-52 w-full object-cover"
+                  className="h-[40vh] w-full object-cover"
                   alt="cover image"
                 />
                 {isMyProfile && (

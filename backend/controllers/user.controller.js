@@ -93,7 +93,7 @@ export const getSuggestedUsers = async (req, res) => {
 
 //controller for updating user
 export const updateUser = async (req, res) => {
-  const { fullName, username, email, currentPassword, NewPassword, bio, link } =
+  const { fullName, username, email, currentPassword, newPassword, bio, link } =
     req.body;
   let { profileImage, coverImage } = req.body;
 
@@ -106,30 +106,27 @@ export const updateUser = async (req, res) => {
     }
 
     // Handle password update
-    if (currentPassword || NewPassword) {
-      if (!currentPassword || !NewPassword) {
-        return res.status(400).json({
-          error: "Please provide both current password and new password",
-        });
-      }
+    if (
+      (!newPassword && currentPassword) ||
+      (!currentPassword && newPassword)
+    ) {
+      return res.status(400).json({
+        error: "Please provide both current password and new password",
+      });
+    }
 
-      const isPasswordCorrect = await bcrypt.compare(
-        currentPassword,
-        user.password
-      );
-
-      if (!isPasswordCorrect) {
+    if (currentPassword && newPassword) {
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch)
         return res.status(400).json({ error: "Current password is incorrect" });
-      }
-
-      if (NewPassword.length < 6) {
+      if (newPassword.length < 6) {
         return res
           .status(400)
-          .json({ error: "Password must be at least 6 characters" });
+          .json({ error: "Password must be at least 6 characters long" });
       }
 
       const salt = await bcrypt.genSalt(10);
-      user.password = await bcrypt.hash(NewPassword, salt);
+      user.password = await bcrypt.hash(newPassword, salt);
     }
 
     // Handle profile image upload

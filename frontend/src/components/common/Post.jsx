@@ -10,7 +10,7 @@ import { toast } from "react-hot-toast";
 import LoadingSpinner from "./LoadingSpinner";
 import { formatPostDate } from "../../utils/date/index.js";
 
-const Post = ({ post }) => {
+const Post = ({ post, index }) => {
   const [comment, setComment] = useState("");
 
   const { data: authUser } = useQuery({
@@ -142,7 +142,7 @@ const Post = ({ post }) => {
 
   return (
     <>
-      <div className="flex gap-2 items-start p-4 border-b border-gray-700">
+      <div className={`flex gap-2 items-start p-4 border-b border-gray-700 ${index%2 === 0 ? "bg-slate-950" : "bg-slate-900"}`}>
         <div className="avatar">
           <Link
             to={`/profile/${postOwner.username}`}
@@ -180,7 +180,7 @@ const Post = ({ post }) => {
             {post.image && (
               <img
                 src={post.image}
-                className="h-80 object-contain rounded-lg border border-gray-700"
+                className="max-h-80 object-contain rounded-xl"
                 alt=""
               />
             )}

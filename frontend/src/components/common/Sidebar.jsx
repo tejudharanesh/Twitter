@@ -1,5 +1,5 @@
 import T from "../svgs/T";
-
+import { useState } from "react";
 import { MdHomeFilled } from "react-icons/md";
 import { IoNotifications } from "react-icons/io5";
 import { FaUser } from "react-icons/fa";
@@ -9,6 +9,7 @@ import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 
 const Sidebar = () => {
+  const [selected, setSelected] = useState("home");
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: async () => {
@@ -39,16 +40,19 @@ const Sidebar = () => {
   const { data: authUser } = useQuery({ queryKey: ["authUser"] });
 
   return (
-    <div className="md:flex-[2_2_0] w-18 max-w-52">
+    <div className="md:flex-[2_2_0] w-18 max-w-48">
       <div className="sticky top-0 left-0 h-screen flex flex-col border-r border-gray-700 w-20 md:w-full">
-        <Link to="/" className="flex justify-center md:justify-start">
-          <T className="px-2 w-12 h-12 rounded-full fill-white hover:bg-stone-900" />
+        <Link to="/" className="flex justify-center">
+          <T className="px-2 w-12 h-12 rounded-full fill-white" />
         </Link>
         <ul className="flex flex-col gap-3 mt-4">
           <li className="flex justify-center md:justify-start">
             <Link
               to="/"
-              className="flex gap-3 items-center hover:bg-stone-900 transition-all rounded-full duration-300 py-2 pl-2 pr-4 max-w-fit cursor-pointer"
+              onClick={() => setSelected("home")}
+              className={`flex gap-3 items-center transition-all md:rounded-l-full  duration-300 py-2 pl-5 pr-4 w-full cursor-pointer ${
+                selected === "home" ? "bg-stone-800" : ""
+              }`}
             >
               <MdHomeFilled className="w-8 h-8" />
               <span className="text-lg hidden md:block">Home</span>
@@ -57,7 +61,10 @@ const Sidebar = () => {
           <li className="flex justify-center md:justify-start">
             <Link
               to="/notifications"
-              className="flex gap-3 items-center hover:bg-stone-900 transition-all rounded-full duration-300 py-2 pl-2 pr-4 max-w-fit cursor-pointer"
+              onClick={() => setSelected("notifications")}
+              className={`flex gap-3 items-center transition-all md:rounded-l-full duration-300 py-2 pl-6 pr-4 w-full cursor-pointer ${
+                selected === "notifications" ? "bg-stone-800" : ""
+              }`}
             >
               <IoNotifications className="w-6 h-6" />
               <span className="text-lg hidden md:block">Notifications</span>
@@ -66,8 +73,11 @@ const Sidebar = () => {
 
           <li className="flex justify-center md:justify-start">
             <Link
+              onClick={() => setSelected("profile")}
               to={`/profile/${authUser?.username}`}
-              className="flex gap-3 items-center hover:bg-stone-900 transition-all rounded-full duration-300 py-2 pl-2 pr-4 max-w-fit cursor-pointer"
+              className={`flex gap-3 items-center transition-all md:rounded-l-full  duration-300 py-2 pl-6 pr-4 w-full cursor-pointer ${
+                selected === "profile" ? "bg-stone-800" : ""
+              }`}
             >
               <FaUser className="w-6 h-6" />
               <span className="text-lg hidden md:block">Profile</span>
@@ -86,7 +96,7 @@ const Sidebar = () => {
                 />
               </div>
             </div>
-            <div className="flex justify-between flex-1">
+            <div className="flex justify-between flex-1 mr-2">
               <div className="hidden md:block">
                 <p className="text-white font-bold text-sm w-20 truncate">
                   {authUser?.fullName}
@@ -94,7 +104,7 @@ const Sidebar = () => {
                 <p className="text-slate-500 text-sm">@{authUser?.username}</p>
               </div>
               <BiLogOut
-                className="w-5 h-5 cursor-pointer"
+                className="w-5 h-5 ml-3 mt-2 cursor-pointer"
                 onClick={(e) => {
                   e.preventDefault();
                   mutate();

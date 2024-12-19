@@ -46,7 +46,7 @@ const ProfilePage = () => {
           },
         });
         const data = await response.json();
-        if (data.error) return null;
+        if (data.error) throw new Error(data.error);
         if (!response.ok) throw new Error(data.error || "failed to fetch user");
         return data;
       } catch (error) {
@@ -82,6 +82,8 @@ const ProfilePage = () => {
         queryClient.invalidateQueries({ queryKey: ["authUser"] }),
         queryClient.invalidateQueries({ queryKey: ["user"] }),
       ]);
+      setCoverImg(null);
+      setProfileImg(null);
     },
     onError: (error) => {
       toast.error(error.message);

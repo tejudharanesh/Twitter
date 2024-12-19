@@ -24,7 +24,7 @@ const EditProfileModal = ({ authUser }) => {
           body: JSON.stringify(formData),
         });
         const data = await response.json();
-        if (data.error) return null;
+        if (data.error) throw new Error(data.error);
         if (!response.ok) throw new Error(data.error || "failed to fetch user");
         return data;
       } catch (error) {

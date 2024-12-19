@@ -112,10 +112,11 @@ export const commentPost = async (req, res) => {
     };
 
     post.comments.push(newComment);
-
     await post.save();
 
-    res.status(201).json(post);
+    const updatedComments = post.comments;
+
+    res.status(201).json(updatedComments);
   } catch (error) {
     console.log("Error during commentPost", error.message);
     res.status(500).json({ error: "Internal Server Error" });

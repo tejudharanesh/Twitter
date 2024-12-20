@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 import cookieParser from "cookie-parser";
 import { v2 as cloudinary } from "cloudinary";
 
@@ -24,7 +25,13 @@ const port = process.env.PORT || 5000;
 app.use(express.json({ limit: "5mb" })); //to get body data
 app.use(express.urlencoded({ extended: true })); //to parse form data
 app.use(cookieParser()); //to parse cookies
-
+app.use(
+  cors({
+    origin: "https://teju-twitter.netlify.app", // Replace with your frontend's URL
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true, // If you need cookies or authentication headers
+  })
+);
 app.use("/api/auth", authRoutes); //to use auth routes
 app.use("/api/users", userRoutes); //to use user routes
 app.use("/api/posts", postRoutes); //to use post routes

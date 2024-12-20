@@ -40,8 +40,8 @@ const Sidebar = () => {
   const { data: authUser } = useQuery({ queryKey: ["authUser"] });
 
   return (
-    <div className="md:flex-[2_2_0] w-18 max-w-48">
-      <div className="sticky top-0 left-0 h-screen flex flex-col border-r border-gray-700 w-20 md:w-full">
+    <div className="md:flex-[2_2_1] w-18 max-w-48">
+      <div className="sticky top-0 left-0 h-screen flex flex-col border-r border-gray-700 w-20 lg:w-full">
         <Link to="/" className="flex justify-center">
           <T className="px-2 w-12 h-12 rounded-full fill-white" />
         </Link>
@@ -55,7 +55,7 @@ const Sidebar = () => {
               }`}
             >
               <MdHomeFilled className="w-8 h-8" />
-              <span className="text-lg hidden md:block">Home</span>
+              <span className="text-lg hidden lg:block">Home</span>
             </Link>
           </li>
           <li className="flex justify-center md:justify-start">
@@ -67,7 +67,7 @@ const Sidebar = () => {
               }`}
             >
               <IoNotifications className="w-6 h-6" />
-              <span className="text-lg hidden md:block">Notifications</span>
+              <span className="text-lg hidden lg:block">Notifications</span>
             </Link>
           </li>
 
@@ -80,7 +80,7 @@ const Sidebar = () => {
               }`}
             >
               <FaUser className="w-6 h-6" />
-              <span className="text-lg hidden md:block">Profile</span>
+              <span className="text-lg hidden lg:block">Profile</span>
             </Link>
           </li>
         </ul>
@@ -89,7 +89,7 @@ const Sidebar = () => {
             to={`/profile/${authUser.username}`}
             className="mt-auto mb-10 flex gap-2 items-start transition-all duration-300 hover:bg-[#181818] py-2 px-4 rounded-full"
           >
-            <div className="avatar hidden md:inline-flex">
+            <div className="avatar hidden lg:inline-flex">
               <div className="w-8 rounded-full">
                 <img
                   src={authUser?.profileImage || "/avatar-placeholder.png"}
@@ -97,7 +97,7 @@ const Sidebar = () => {
               </div>
             </div>
             <div className="flex justify-between flex-1 mr-2">
-              <div className="hidden md:block">
+              <div className="hidden lg:block">
                 <p className="text-white font-bold text-sm w-20 truncate">
                   {authUser?.fullName}
                 </p>

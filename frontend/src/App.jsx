@@ -18,7 +18,6 @@ function App() {
     error,
     isError,
   } = useQuery({
-    //we use this query to get the authUser
     queryKey: ["authUser"],
     queryFn: async () => {
       try {

@@ -142,7 +142,11 @@ const Post = ({ post, index }) => {
 
   return (
     <>
-      <div className={`flex gap-2 items-start p-4 border-b border-gray-700 ${index%2 === 0 ? "bg-slate-950" : "bg-slate-900"}`}>
+      <div
+        className={`flex gap-2 items-start p-4 border-b border-gray-700 ${
+          index % 2 === 0 ? "bg-slate-950" : "bg-slate-900"
+        }`}
+      >
         <div className="avatar">
           <Link
             to={`/profile/${postOwner.username}`}
@@ -153,10 +157,13 @@ const Post = ({ post, index }) => {
         </div>
         <div className="flex flex-col flex-1">
           <div className="flex gap-2 items-center">
-            <Link to={`/profile/${postOwner.username}`} className="font-bold">
+            <Link
+              to={`/profile/${postOwner.username}`}
+              className="font-bold text-lg"
+            >
               {postOwner.fullName}
             </Link>
-            <span className="text-gray-700 flex gap-1 text-sm">
+            <span className="text-gray-400 flex gap-1 text-sm">
               <Link to={`/profile/${postOwner.username}`}>
                 @{postOwner.username}
               </Link>
@@ -180,7 +187,7 @@ const Post = ({ post, index }) => {
             {post.image && (
               <img
                 src={post.image}
-                className="max-h-80 object-contain rounded-xl"
+                className="max-h-80 object-contain rounded-xl border border-gray-700"
                 alt=""
               />
             )}
@@ -206,12 +213,10 @@ const Post = ({ post, index }) => {
                 className="modal border-none outline-none"
               >
                 <div className="modal-box rounded border border-gray-600">
-                  <h3 className="font-bold text-lg mb-4">COMMENTS</h3>
+                  <h3 className="font-bold text-lg mb-4">Comments</h3>
                   <div className="flex flex-col gap-3 max-h-60 overflow-auto">
                     {post.comments.length === 0 && (
-                      <p className="text-sm text-slate-500">
-                        No comments yet 🤔 Be the first one 😉
-                      </p>
+                      <p className="text-sm text-slate-500">No comments yet</p>
                     )}
                     {post.comments.map((comment) => (
                       <div key={comment._id} className="flex gap-2 items-start">

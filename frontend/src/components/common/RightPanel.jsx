@@ -34,9 +34,9 @@ const RightPanel = () => {
   if (suggestedUsers?.length === 0) return <div className="w-0 md:w-64"></div>;
 
   return (
-    <div className="hidden lg:block my-4 mx-2">
+    <div className="hidden md:block my-4 mx-2 sticky top-0">
       <div className="bg-[#16181C] p-4 rounded-md sticky top-2">
-        <p className="font-bold">Who to follow</p>
+        <p className="font-bold">Suggested users</p>
         <div className="flex flex-col gap-4">
           {/* item */}
           {isLoading && (
@@ -71,13 +71,13 @@ const RightPanel = () => {
                 </div>
                 <div>
                   <button
-                    className="btn bg-white text-black hover:bg-white hover:opacity-90 rounded-full btn-sm"
+                    className="btn bg-white text-black hover:bg-primary hover:opacity-100 hover:text-white rounded-full btn-sm"
                     onClick={(e) => {
                       e.preventDefault();
                       follow(user._id);
                     }}
                   >
-                    {isPending ? <LoadingSpinner size="sm"/> : "Follow"}
+                    {isPending ? <LoadingSpinner size="sm" /> : "Follow"}
                   </button>
                 </div>
               </Link>

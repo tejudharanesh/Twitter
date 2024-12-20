@@ -135,7 +135,7 @@ const ProfilePage = () => {
               <div className="relative group/cover">
                 <img
                   src={coverImg || user?.coverImage || "/cover.png"}
-                  className="h-52 w-full object-cover"
+                  className="h-40 md:h-52 w-full object-cover"
                   alt="cover image"
                 />
                 {isMyProfile && (
@@ -161,13 +161,14 @@ const ProfilePage = () => {
                 />
                 {/* USER AVATAR */}
                 <div className="avatar absolute -bottom-16 left-4">
-                  <div className="w-32 rounded-full relative group/avatar">
+                  <div className="w-28 md:w-32 rounded-full relative group/avatar bg-black">
                     <img
                       src={
                         profileImg ||
                         user?.profileImage ||
                         "/avatar-placeholder.png"
                       }
+                      className="p-1 rounded-full"
                     />
                     <div
                       className={`absolute top-5 right-3 bg-primary rounded-full cursor-pointer ${
@@ -206,7 +207,7 @@ const ProfilePage = () => {
                 )}
               </div>
 
-              <div className="flex flex-col gap-4 mt-14 px-4">
+              <div className="flex flex-col gap-4 mt-10 px-4">
                 <div className="flex flex-col">
                   <span className="font-bold text-lg">{user?.fullName}</span>
                   <span className="text-sm text-slate-500">

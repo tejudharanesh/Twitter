@@ -5,9 +5,9 @@ export const generateTokenAndSetCookie = (userId, res) => {
     expiresIn: "15d",
   });
   res.cookie("token", token, {
-    maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days in milliseconds
-    httpOnly: true,
-    sameSite: "Strict", // Prevent CSRF attacks
-    secure: process.env.NODE_ENV === "production",
-  });
+  maxAge: 15 * 24 * 60 * 60 * 1000, // 15 days
+  httpOnly: true, // Prevent client-side access
+  sameSite: "None", // For cross-origin requests
+  secure: true, // Ensure HTTPS-only cookies
+});
 };

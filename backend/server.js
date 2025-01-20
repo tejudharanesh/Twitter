@@ -25,13 +25,12 @@ const port = process.env.PORT || 5000;
 app.use(express.json({ limit: "6mb" })); //to get body data
 app.use(express.urlencoded({ extended: true })); //to parse form data
 app.use(cookieParser()); //to parse cookies
-app.use(
-  cors({
-    origin: "https://678ddeddeec71241030e2990--celebrated-malabi-7de64c.netlify.app/", // Replace with your frontend's URL
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true, // If you need cookies or authentication headers
-  })
-);
+app.use(cors({
+  origin: '*', // Allow any origin
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE', // Allowed HTTP methods
+  allowedHeaders: 'Content-Type,Authorization', // Allowed headers
+  credentials: true, // If cookies or Authorization headers are used, set this to true
+}));
 app.use("/api/auth", authRoutes); //to use auth routes
 app.use("/api/users", userRoutes); //to use user routes
 app.use("/api/posts", postRoutes); //to use post routes

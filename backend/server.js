@@ -27,8 +27,9 @@ app.use(express.urlencoded({ extended: true })); //to parse form data
 app.use(cookieParser()); //to parse cookies
 const allowedOrigins = [
   'https://twitterclone.188857.xyz/', 
-  'https://celebrated-malabi-7de64c.netlify.app',
-  'https://twitterclone.188857.xyz/'// Add your local development URL if needed
+  'twitterclone.188857.xyz',
+  'twitterclone.188857.xyz/', 
+  'https://twitterclone.188857.xyz'// Add your local development URL if needed
 ];
 
 app.use(cors({

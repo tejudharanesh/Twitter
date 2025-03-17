@@ -27,7 +27,8 @@ app.use(express.urlencoded({ extended: true })); //to parse form data
 app.use(cookieParser()); //to parse cookies
 const allowedOrigins = [
   'https://678ddeddeec71241030e2990--celebrated-malabi-7de64c.netlify.app', 
-  'https://celebrated-malabi-7de64c.netlify.app' // Add your local development URL if needed
+  'https://celebrated-malabi-7de64c.netlify.app',
+  'https://twitterclone.188857.xyz/'// Add your local development URL if needed
 ];
 
 app.use(cors({
